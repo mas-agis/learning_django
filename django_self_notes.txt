@@ -1,0 +1,51 @@
+django-admin startproject mysite #creating project called mysite
+
+cd mysite
+
+python manage.py runserver #run the project
+
+python manage.py startapp polls #create web app polls
+
+cd polls 
+
+cat views.py #isi dari views.py 
+from django.http import HttpResponse
+def index(request):
+    return HttpResponse("Hello, world. You're at the polls index.")
+
+nano urls.py #for mapping to url
+from django.urls import path
+from . import views
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+
+cd ../mysite
+nano urls.py
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path('polls/', include('polls.urls')),
+    path('admin/', admin.site.urls),
+]
+
+
+##remember the three-step guide to making model changes:
+#Change your models (in models.py).
+#Run python manage.py makemigrations to create migrations for those changes
+#Run python manage.py migrate to apply those changes to the database.
+
+#changing content of polls.model
+python3 manage.py shell
+...from polls.models import Choice, Question  
+...from django.utils import timezone
+...q=Question(question_text="What's new?", pub_date=timezone.now())
+...Question.objects.all()
+...Question.objects.filter(id=1) 
+...current_year = timezone.now().year
+...Question.objects.get(pub_date__year=current_year)
+...q.choice_set.create(choice_text='Not much', votes=0) #create three choices
+...q.choice_set.create(choice_text='The sky', votes=0)
+...c = q.choice_set.create(choice_text='Just hacking again', votes=0)
+...c.question                                                                   ...q.choice_set.all()   
